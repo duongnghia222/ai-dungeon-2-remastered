@@ -1,0 +1,5 @@
+.idea/
+**/__pycache__/
+venv
+generator/gpt2/models
+Python37

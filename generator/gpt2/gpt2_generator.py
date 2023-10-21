@@ -1,7 +1,6 @@
 import json
 import os
 import warnings
-
 import numpy as np
 import tensorflow as tf
 from generator.gpt2.src import encoder, model, sample
@@ -16,13 +15,13 @@ class GPT2Generator:
     """Class representing a text generator based on the GPT-2 model."""
     def __init__(self, generate_num=80, temperature=0.4, top_p=0.9, censor=False):
         """
-                Initializes the GPT2Generator object.
+        Initializes the GPT2Generator object.
 
-                Args:
-                    generate_num (int): Number of tokens to generate (default is 80).
-                    temperature (float): Parameter controlling the randomness of generated text, 1 is random -> creative
-                    top_p (float): Parameter for nucleus sampling, controlling the probability mass to consider
-                    censor (bool): Indicates whether to censor the generated text or not (default is False).
+        Args:
+            generate_num (int): Number of tokens to generate (default is 80).
+            temperature (float): Parameter controlling the randomness of generated text, 1 is random -> creative
+            top_p (float): Parameter for nucleus sampling, controlling the probability mass to consider
+            censor (bool): Indicates whether to censor the generated text or not (default is False).
         """
         self.generate_num = generate_num
         self.default_gen_num = generate_num
@@ -44,8 +43,6 @@ class GPT2Generator:
         config = tf.compat.v1.ConfigProto()
         config.gpu_options.allow_growth = True
         self.sess = tf.compat.v1.Session(config=config)
-
-        # self.context = tf.placeholder(tf.int32, [self.batch_size, None])
         self.context = tf.keras.Input(shape=(None,), dtype=tf.int32, batch_size=self.batch_size)
         # np.random.seed(seed)
         # tf.set_random_seed(seed)
@@ -54,6 +51,7 @@ class GPT2Generator:
         saver = tf.train.Saver()
         ckpt = tf.train.latest_checkpoint(os.path.join(models_dir, self.model_name))
         saver.restore(self.sess, ckpt)
+        self.model = tf.keras.models.load_model(self.checkpoint_path)
 
     def prompt_replace(self, prompt):
         # print("\n\nBEFORE PROMPT_REPLACE:")

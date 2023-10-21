@@ -215,7 +215,7 @@ def play_aidungeon_2():
     ping = False
 
     print("\nInitializing AI Dungeon! (This might take a few minutes, more tensorflow/cuda errors may be shown during this time)\n")
-    generator = GPT2Generator()
+    generator = GPT2Generator(generate_num=80, temperature=0.4, top_p=0.9, censor=False)
     story_manager = UnconstrainedStoryManager(generator, upload_story=upload_story, cloud=False)
     print("\n")
 
@@ -451,7 +451,7 @@ def play_aidungeon_2():
                     continue
 
                 elif command == "alter": 
-                    if len(story_manager.story.results) is 0: 
+                    if len(story_manager.story.results) == 0:
                         console_print("There's no results to alter.\n") 
                         continue 
      
@@ -464,7 +464,7 @@ def play_aidungeon_2():
                     console_print(str(story_manager.story))
 
                 elif command == "altergen": 
-                    if len(story_manager.story.results) is 0: 
+                    if len(story_manager.story.results) == 0:
                         console_print("There's no results to alter.\n") 
                         continue 
 
@@ -529,7 +529,7 @@ def play_aidungeon_2():
                     
                 elif command == 'retry':
 
-                    if len(story_manager.story.actions) is 0:
+                    if len(story_manager.story.actions) == 0:
                         console_print("There is nothing to retry.")
                         continue
 

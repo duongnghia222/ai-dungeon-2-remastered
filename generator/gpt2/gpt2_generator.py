@@ -13,11 +13,20 @@ tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
 
 class GPT2Generator:
+    """Class representing a text generator based on the GPT-2 model."""
     def __init__(self, generate_num=80, temperature=0.4, top_p=0.9, censor=False):
+        """
+                Initializes the GPT2Generator object.
+
+                Args:
+                    generate_num (int): Number of tokens to generate (default is 80).
+                    temperature (float): Parameter controlling the randomness of generated text, 1 is random -> creative
+                    top_p (float): Parameter for nucleus sampling, controlling the probability mass to consider
+                    censor (bool): Indicates whether to censor the generated text or not (default is False).
+        """
         self.generate_num = generate_num
         self.default_gen_num = generate_num
         self.temp = temperature
-        #self.top_k = top_k
         self.top_p = top_p
         self.censor = censor
 
@@ -26,6 +35,7 @@ class GPT2Generator:
         self.checkpoint_path = os.path.join(self.model_dir, self.model_name)
 
         self.batch_size = 1
+
         self.samples = 1
 
         models_dir = os.path.expanduser(os.path.expandvars(self.model_dir))

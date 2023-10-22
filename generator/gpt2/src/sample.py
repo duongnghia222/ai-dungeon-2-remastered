@@ -1,6 +1,7 @@
 import tensorflow as tf
 from generator.gpt2.src import model
 
+tf.compat.v1.disable_eager_execution()
 
 def penalize_used(logits, output):
 
@@ -68,6 +69,7 @@ def sample_sequence(
         context = tf.fill([batch_size, 1], start_token)
 
     def step(hparams, tokens, past=None):
+        tokens = tf.convert_to_tensor(tokens)
         lm_output = model.model(
             hparams=hparams, X=tokens, past=past, reuse=tf.compat.v1.AUTO_REUSE
         )

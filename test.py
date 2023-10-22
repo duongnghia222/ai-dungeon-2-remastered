@@ -1,17 +1,27 @@
 import torch
-from transformers import GPT2LMHeadModel, GPT2Tokenizer
+from transformers import GPT2LMHeadModel, GPT2Tokenizer, GPT2Config
+import json
 
 # Path to the .bin file of the pre-trained GPT-2 model
-model_path = 'generator/gpt2/models/model_v5/AI-Dungeon-2-Classic.bin'
+model_path = 'generator/gpt2/models/model_v5/story_gen.bin'
+config_path = 'generator/gpt2/models/model_v5/config1.json'
 
 # Load the tokenizer
 tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
 
-# Load the model
-model = GPT2LMHeadModel.from_pretrained('gpt2')
+# Load the configuration file
+with open(config_path, "r") as config_file:
+    config_dict = json.load(config_file)
+
+# Initialize the configuration object
+config = GPT2Config.from_dict(config_dict)
+
+# Initialize the model with the configuration
+model = GPT2LMHeadModel(config)
 
 # Load the model weights from the .bin file
-model.load_state_dict(torch.load(model_path))
+weights = torch.load(model_path, map_location='cpu')
+model.load_state_dict(weights)
 
 # Set the model to evaluation mode
 model.eval()
@@ -25,7 +35,7 @@ def generate_text(seed_text, max_length=100):
     return generated_text
 
 # Example seed text
-seed_text = "Once upon a time, there was a dragon"
+seed_text = "Hello, I'm a language model,"
 
 # Generate text
 generated_text = generate_text(seed_text)

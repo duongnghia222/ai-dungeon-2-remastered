@@ -85,15 +85,14 @@ def sample_sequence(
             next_outputs = step(hparams, prev, past=past)
             logits = next_outputs["logits"][:, -1, :] / tf.cast(temperature, dtype=tf.float32)
             logits = penalize_used(logits, output)
-            #logits = top_k_logits(logits, k=top_k)
             logits = top_p_logits(logits, p=top_p)
             samples = tf.random.categorical(logits, num_samples=1, dtype=tf.int32)
             return [
-                next_outputs["presents"]
+                tf.convert_to_tensor(next_outputs["presents"])
                 if past is None
-                else tf.concat([past, next_outputs["presents"]], axis=-2),
-                samples,
-                tf.concat([output, samples], axis=1),
+                else tf.convert_to_tensor(tf.concat([past, next_outputs["presents"]], axis=-2)),
+                tf.convert_to_tensor(samples),
+                tf.concat([tf.convert_to_tensor(output), tf.convert_to_tensor(samples)], axis=1),
             ]
 
         past, prev, output = body(None, context, context)

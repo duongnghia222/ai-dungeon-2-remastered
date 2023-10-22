@@ -107,7 +107,7 @@ class GPT2Generator:
                 feed_dict={
                     self.context: [context_tokens for _ in range(self.batch_size)]
                 },
-            )[:, len(context_tokens) :]
+            )[:, len(context_tokens):]
             for i in range(self.batch_size):
                 generated += 1
                 text = self.enc.decode(out[i])

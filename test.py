@@ -1,53 +1,35 @@
-import tensorflow as tf
-from tensorflow.keras.preprocessing.sequence import pad_sequences
+import torch
+from transformers import GPT2LMHeadModel, GPT2Tokenizer
 
-# Load the tokenizer (replace YourTokenizer() with your actual tokenizer)
-tokenizer = YourTokenizer()  # Replace YourTokenizer() with the actual tokenizer you used during training
+# Path to the .bin file of the pre-trained GPT-2 model
+model_path = 'generator/gpt2/models/model_v5/AI-Dungeon-2-Classic.bin'
 
-# Load the pre-trained model
-model_path = 'generator/gpt2/models/model_v5'
-model = tf.keras.models.load_model(model_path)
+# Load the tokenizer
+tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
 
+# Load the model
+model = GPT2LMHeadModel.from_pretrained('gpt2')
 
-# Function to generate a story
-def generate_story(seed_text, max_length=100):
-    # Tokenize the seed text
-    seed_text_encoded = tokenizer.texts_to_sequences([seed_text])[0]
+# Load the model weights from the .bin file
+model.load_state_dict(torch.load(model_path))
 
-    # Pad the encoded seed text
-    seed_text_padded = pad_sequences([seed_text_encoded], maxlen=max_length, padding='pre')
+# Set the model to evaluation mode
+model.eval()
 
-    # Generate the story
-    generated_text = []
-    for _ in range(max_length):
-        # Predict the next word
-        predicted_word_index = model.predict_classes(seed_text_padded, verbose=0)[0]
-
-        # Map the index back to the word using the tokenizer
-        predicted_word = tokenizer.index_word.get(predicted_word_index, '')
-
-        # Break if the predicted word is not found or is an end token
-        if predicted_word in ['<end>', '']:
-            break
-
-        # Add the predicted word to the generated text
-        generated_text.append(predicted_word)
-
-        # Update the seed text for the next iteration
-        seed_text_encoded.append(predicted_word_index)
-        seed_text_padded = pad_sequences([seed_text_encoded], maxlen=max_length, padding='pre')
-
-    # Join the generated words to form the story
-    generated_story = ' '.join(generated_text)
-    return generated_story
-
+# Function to generate text using the loaded model
+def generate_text(seed_text, max_length=100):
+    input_ids = tokenizer.encode(seed_text, return_tensors='pt')
+    with torch.no_grad():
+        output = model.generate(input_ids, max_length=max_length, pad_token_id=tokenizer.eos_token_id)
+    generated_text = tokenizer.decode(output[0], skip_special_tokens=True)
+    return generated_text
 
 # Example seed text
 seed_text = "Once upon a time, there was a dragon"
 
-# Generate the story
-generated_story = generate_story(seed_text)
+# Generate text
+generated_text = generate_text(seed_text)
 
-# Print the generated story
-print("Generated Story:")
-print(generated_story)
+# Print the generated text
+print("Generated Text:")
+print(generated_text)

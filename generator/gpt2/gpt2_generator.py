@@ -48,10 +48,11 @@ class GPT2Generator:
         # tf.set_random_seed(seed)
         self.gen_output()
 
-        saver = tf.train.Saver()
-        ckpt = tf.train.latest_checkpoint(os.path.join(models_dir, self.model_name))
-        saver.restore(self.sess, ckpt)
-        self.model = tf.keras.models.load_model(self.checkpoint_path)
+        # saver = tf.train.Saver()
+        # ckpt = tf.train.latest_checkpoint(os.path.join(models_dir, self.model_name))
+        # saver.restore(self.sess, ckpt)
+        # self.model = self.create_model()
+        # self.load_model_weights()
 
     def prompt_replace(self, prompt):
         # print("\n\nBEFORE PROMPT_REPLACE:")

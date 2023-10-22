@@ -219,18 +219,18 @@ def play_aidungeon_2():
     story_manager = UnconstrainedStoryManager(generator, upload_story=upload_story, cloud=False)
     print("\n")
 
-    with open("opening.txt", "r", encoding="utf-8") as file:
+    with open("opening-banner.txt", "r", encoding="utf-8") as file:
         starter = file.read()
     _ = os.system('color 0E')
-    _ = os.system('title AI Dungeon 2 Unleashed - Modded by Henk717 - (Re)based on the Thadunge2 fork')
+    _ = os.system('title AI Dungeon 2 Remastered')
     _ = os.system('mode con: cols=109 lines=40')
     cls()
 
     print(starter)
-    print("Modded by Henk717 - (Re)based on the Thadunge2 fork")
     print("Version : 2.0")
 
     while True:
+        # Reset the story in the story manager if it is not already None.
         if story_manager.story is not None:
             story_manager.story = None
 

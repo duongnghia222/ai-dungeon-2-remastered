@@ -26,9 +26,9 @@ def play_dm():
     generator = GPT2Generator(temperature=0.9)
 
     story_manager = UnconstrainedStoryManager(HumanDM())
-    context, prompt = select_game()
-    console_print(context + prompt)
-    story_manager.start_new_story(prompt, context=context, upload_story=False)
+    _, _, _, _, context, prompt = select_game()
+    console_print(context['prompts'][0] + prompt)
+    story_manager.start_new_story(prompt, context=context['prompts'][0], upload_story=False)
 
     player = AIPlayer(generator)
 

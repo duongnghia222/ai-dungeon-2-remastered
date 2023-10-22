@@ -59,7 +59,6 @@ def sample_sequence(
     batch_size=None,
     context=None,
     temperature=1,
-    #top_k=0,
     top_p=1,
 ):
     if start_token is None:
@@ -82,7 +81,6 @@ def sample_sequence(
         }
 
     with tf.compat.v1.name_scope("sample_sequence"):
-
         def body(past, prev, output):
             next_outputs = step(hparams, prev, past=past)
             logits = next_outputs["logits"][:, -1, :] / tf.cast(temperature, dtype=tf.float32)
